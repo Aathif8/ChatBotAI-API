@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -6,6 +6,8 @@ import os
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 import requests
+import openai
+import io
 
 load_dotenv()
 
@@ -22,6 +24,7 @@ app.add_middleware(
 
 HF_API_KEY = os.getenv("HF_API_KEY")  # store your key in .env
 HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
+HF_TRANSCRIBE_URL = "https://api-inference.huggingface.co/models/openai/whisper-small"
 HEADERS = {"Authorization": f"Bearer {HF_API_KEY}"}
 
 llm = ChatOpenAI(
@@ -39,6 +42,36 @@ user_data = {
 class QuestionRequest(BaseModel):
     question: str
     history: list[str] = []
+
+# Functioon to transcribe audio
+def transcribe_audio(audio_bytes):
+    audio_file = io.BytesIO(audio_bytes)
+    audio_file.name = "audio.mp3"
+
+    response = openai.audio.transcriptions.create(
+        model="whisper-1",
+        file=audio_file
+    )
+
+    return response.text
+
+# Speech-to-Text Function
+def TranscribeHF(audio_bytes):
+    response = requests.post(
+        HF_TRANSCRIBE_URL,
+        headers={
+            "Authorization": f"Bearer {HF_API_KEY}",
+            "Content-Type": "application/octet-stream"
+        },
+        data=audio_bytes
+    )
+
+    if response.status_code == 200:
+        result = response.json()
+        return result.get("text", "No text found.")
+    else:
+        return f"Error: {response.status_code} - {response.text}"
+
 
 def call_huggingface_api(prompt: str):
     response = requests.post(
@@ -99,3 +132,17 @@ async def ask_bot(req: QuestionRequest):
     prompt = f"You are a helpful banking assistant.\nUser: {req.question}"
     answer = call_huggingface_api(prompt)
     return {"answer": answer}
+
+@app.post("/transcribeopenai")
+async def process_audio(file: UploadFile = File(...)):
+    audio_bytes = await file.read()
+
+    transcription = transcribe_audio(audio_bytes)
+    return {"openaitranscription": transcription}
+
+
+@app.post("/transcribehf")
+async def process_audio(file: UploadFile = File(...)):
+    audio_bytes = await file.read()
+    transcription = TranscribeHF(audio_bytes)
+    return {"hftranscription": transcription}
