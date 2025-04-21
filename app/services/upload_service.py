@@ -45,3 +45,6 @@ def store_data_in_chroma(text, source):
         embeddings=[embedding],
         ids=[source]
     )
+
+def get_chroma_collections():
+    return collection
