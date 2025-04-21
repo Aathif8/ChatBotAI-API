@@ -5,3 +5,6 @@ openai
 python-dotenv
 langchain-community
 python-multipart
+PyMuPDF
+python-docx
+chromadb==0.4.22
