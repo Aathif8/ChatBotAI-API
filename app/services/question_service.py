@@ -12,17 +12,17 @@ HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
 HF_TRANSCRIBE_URL = "https://api-inference.huggingface.co/models/openai/whisper-small"
 HEADERS = {"Authorization": f"Bearer {HF_API_KEY}"}
 
-# llm_model = Llama(model_path="./models/tinyllama-1.1b-chat-v1.0-q4_k_m.gguf", n_ctx=1024, n_batch=64, temperature=0.1, top_p=0.95, repeat_penalty=1.2)
+llm_model = Llama(model_path="./models/tinyllama-1.1b-chat-v1.0-q4_k_m.gguf", n_ctx=1024, n_batch=64, temperature=0.1, top_p=0.95, repeat_penalty=1.2)
 
-llm = Llama.from_pretrained(
-	repo_id="TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF",
-	filename="tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
-    temperature=0.1,
-    top_p=0.95,
-    repeat_penalty=1.2,
-    n_ctx=1024,
-    n_batch=64,
-)
+# llm = Llama.from_pretrained(
+# 	repo_id="TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF",
+# 	filename="tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+#     temperature=0.1,
+#     top_p=0.95,
+#     repeat_penalty=1.2,
+#     n_ctx=1024,
+#     n_batch=64,
+# )
 
 
 # Embedding the Query to retrieve relevant data from ChromaDB
@@ -54,5 +54,5 @@ def call_huggingface_api(prompt: str):
         return f"Error: {response.status_code} - {response.text}"
     
 def call_llama(prompt: str):
-    response = llm(prompt, max_tokens=1000)
+    response = llm_model(prompt, max_tokens=1000)
     return response["choices"][0]["text"] if "choices" in response else "No response from model."
