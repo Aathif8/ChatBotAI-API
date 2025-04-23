@@ -53,6 +53,12 @@ def call_huggingface_api(prompt: str):
     else:
         return f"Error: {response.status_code} - {response.text}"
     
+def trucncate_prompt(prompt: str, max_tokens: int = 256) -> str:
+    approx_chat_limit = max_tokens * 4
+    return prompt[:approx_chat_limit]
+
+
 def call_llama(prompt: str):
-    response = llm_model(prompt, max_tokens=256)
+    truncated = trucncate_prompt(prompt, max_tokens=512 - 256)
+    response = llm_model(truncated, max_tokens=256)
     return response["choices"][0]["text"] if "choices" in response else "No response from model."
