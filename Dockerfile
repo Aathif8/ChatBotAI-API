@@ -4,6 +4,10 @@ FROM public.ecr.aws/lambda/python:latest
 # Copy the app files into the container
 COPY app/ ./app
 
+# Install necessary build tools
+RUN apt-get update && \
+    apt-get install -y build-essential g++-10 gcc cmake
+    
 # Install dependencies
 RUN pip install -r app/requirements.txt
 
