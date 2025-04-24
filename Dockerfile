@@ -8,7 +8,7 @@ COPY app/ ./app
 RUN pip install -r app/requirements.txt
 
 # Run the Download Script
-RUN Python app/download.py
+RUN Python app/download_model.py
 
 # Command to run the FastAPI app through Magnum for AWS Lambda
 CMD ["app.main.handler"]
