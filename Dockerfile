@@ -1,5 +1,5 @@
 # Use the AWS Lambda base image for Python
-FROM python:alphine
+FROM python:alpine
 
 # Copy the app files into the container
 COPY app/ ./app
