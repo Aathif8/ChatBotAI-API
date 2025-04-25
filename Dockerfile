@@ -1,5 +1,5 @@
 # Use the AWS Lambda base image for Python
-FROM public.ecr.aws/lambda/python:3.11
+FROM python:alphine
 
 # Copy the app files into the container
 COPY app/ ./app
