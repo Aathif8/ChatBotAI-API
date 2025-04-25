@@ -5,8 +5,8 @@ FROM python:alpine
 COPY app/ ./app
 
 # Install necessary build tools
-RUN apt-get update && \
-    apt-get install -y build-essential g++-10 gcc cmake
+RUN apk update && \
+    apk add --no-cache build-base g++ gcc cmake
     
 # Install dependencies
 RUN pip install -r app/requirements.txt
