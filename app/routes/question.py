@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
-from services.question_service import call_llama, retrieve_relevant_data
+from services.question_service import OpenRouterAPI, retrieve_relevant_data
 
 load_dotenv()
 
@@ -52,5 +52,5 @@ async def ask_bot(req: QuestionRequest):
         f"Question:\n{query}"
     )
 
-    answer = call_llama(prompt)
+    answer = OpenRouterAPI(prompt)
     return {"answer": answer}
