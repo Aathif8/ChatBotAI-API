@@ -8,6 +8,3 @@ python-multipart
 PyMuPDF
 python-docx
 chromadb
-llama-cpp-python
-huggingface-hub
-mangum
