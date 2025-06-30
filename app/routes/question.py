@@ -32,9 +32,10 @@ async def ask_bot(req: QuestionRequest):
     context = retrieve_relevant_data(query)
 
     prompt = (
-        f"Use the following context to answer the question.\n\n"
+        "கீழே வழங்கப்பட்ட உள்ளடக்கத்தைப் பயன்படுத்தி கேள்விக்குப் பதில் அளிக்கவும்.\n\n"
         f"Context:\n{context}\n\n"
-        f"Question:\n{query}"
+        f"Question:\n{query}\n\n"
+        "உங்கள் பதில் தமிழ் மொழியில் மட்டுமே இருக்க வேண்டும்."
     )
 
     response = llm([HumanMessage(content=prompt)])
@@ -47,9 +48,10 @@ async def ask_bot(req: QuestionRequest):
     context = retrieve_relevant_data(query)
 
     prompt = (
-        f"Use the following context to answer the question.\n\n"
+        "கீழே வழங்கப்பட்ட உள்ளடக்கத்தைப் பயன்படுத்தி கேள்விக்குப் பதில் அளிக்கவும்.\n\n"
         f"Context:\n{context}\n\n"
-        f"Question:\n{query}"
+        f"Question:\n{query}\n\n"
+        "உங்கள் பதில் தமிழ் மொழியில் மட்டுமே இருக்க வேண்டும்."
     )
 
     answer = OpenRouterAPI(prompt)
