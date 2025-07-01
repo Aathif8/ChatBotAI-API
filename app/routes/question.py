@@ -13,6 +13,7 @@ router = APIRouter()
 class QuestionRequest(BaseModel):
     question: str
     history: list[str] = []
+    language: str = "en"
 
 # Mock user data
 user_data = {
@@ -31,12 +32,20 @@ async def ask_bot(req: QuestionRequest):
     query = req.question.lower()
     context = retrieve_relevant_data(query)
 
-    prompt = (
-        "கீழே வழங்கப்பட்ட உள்ளடக்கத்தைப் பயன்படுத்தி கேள்விக்குப் பதில் அளிக்கவும்.\n\n"
-        f"Context:\n{context}\n\n"
-        f"Question:\n{query}\n\n"
-        "உங்கள் பதில் தமிழ் மொழியில் மட்டுமே இருக்க வேண்டும்."
-    )
+    if req.language == "en":
+        prompt = (
+            "Please answer the question using the context provided below.\n\n"
+            f"Context:\n{context}\n\n"
+            f"Question:\n{query}\n\n"
+            "Your answer should be in English only and question related alone."
+        )
+    else:
+        prompt = (
+            "கீழே வழங்கப்பட்ட உள்ளடக்கத்தைப் பயன்படுத்தி கேள்விக்குப் பதில் அளிக்கவும்.\n\n"
+            f"Context:\n{context}\n\n"
+            f"Question:\n{query}\n\n"
+            "உங்கள் பதில் தமிழ் மொழியில் மட்டுமே இருக்க வேண்டும்."
+        )
 
     response = llm([HumanMessage(content=prompt)])
 
@@ -47,12 +56,20 @@ async def ask_bot(req: QuestionRequest):
     query = req.question.lower()
     context = retrieve_relevant_data(query)
 
-    prompt = (
-        "கீழே வழங்கப்பட்ட உள்ளடக்கத்தைப் பயன்படுத்தி கேள்விக்குப் பதில் அளிக்கவும்.\n\n"
-        f"Context:\n{context}\n\n"
-        f"Question:\n{query}\n\n"
-        "உங்கள் பதில் தமிழ் மொழியில் மட்டுமே இருக்க வேண்டும்."
-    )
+    if req.language == "en":
+        prompt = (
+            "Please answer the question using the context provided below.\n\n"
+            f"Context:\n{context}\n\n"
+            f"Question:\n{query}\n\n"
+            "Your answer should be in English only and question related alone."
+        )
+    else:
+        prompt = (
+            "கீழே வழங்கப்பட்ட உள்ளடக்கத்தைப் பயன்படுத்தி கேள்விக்குப் பதில் அளிக்கவும்.\n\n"
+            f"Context:\n{context}\n\n"
+            f"Question:\n{query}\n\n"
+            "உங்கள் பதில் தமிழ் மொழியில் மட்டுமே இருக்க வேண்டும்."
+        )
 
     answer = OpenRouterAPI(prompt)
     return {"answer": answer}
